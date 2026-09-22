@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import type { StaticImageData } from 'next/image';
 import type { BorderCollection } from '../assets/ascii/borders';
 import AsciiOverlay from '../components/AsciiOverlay';
-import { swoosh, flourish, wind, lillies, bubbles, jellyfish, jellyfish2 } from '../assets/ascii/overlays';
+import { swoosh, flourish, flourish2, wind, lillies, bubbles, jellyfish, jellyfish2 } from '../assets/ascii/overlays';
 import { sparkleLine, whimsyLine } from '../assets/ascii/borders';
 
 export function entrySlug(date: Date): string {
@@ -24,6 +24,40 @@ export type ArchiveEntry = {
 };
 
 export const entries: ArchiveEntry[] = [
+  {
+    title: 'started the semester, read some books, won a hackathon challenge',
+    date: new Date(Date.UTC(2026, 8, 21)),
+    body: (
+      <>
+        I realized that my local github config was the wrong email so my github contributions graph has been off oops
+        <br /><br />
+        Semester so far so good, really happy to be in drawing for designers! Maybe I'll add an art section to this website
+        <br /><br />
+        Recently read Never Let Me Go by Ishiguro and Martyr! by Akbar, thinking about what to read next
+        <br /><br />
+        I participated in hackMIT this weekend and pulled my first all nighter of the semester lol.
+        It was my first hackathon in a while and actually really fun! It's crazy how quickly you can build with agentic coding
+        (especially when using nemotron on an asus ascent gx10)
+        <br /><br />
+        And today I ran to berryline with my friends! yippee
+      </>
+    ),
+    image: require('../assets/archive/hackmit.png').default,
+    caption: 'timmy and tommy hard at work',
+    borders: sparkleLine,
+    overlay: (
+      <>
+        <AsciiOverlay
+          art={flourish2}
+          style={{ bottom: '7%', left: '3%' }}
+         />
+        <AsciiOverlay
+          art={flourish2}
+          style={{ transform: 'scaleX(-1)', top: '7%', right: '3%' }}
+         />
+      </>
+    )
+  },
   {
     title: 'too soon once again, it feels like summer\'s already ending',
     date: new Date(Date.UTC(2026, 7, 5)),
