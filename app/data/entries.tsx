@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import type { StaticImageData } from 'next/image';
 import type { BorderCollection } from '../assets/ascii/borders';
 import AsciiOverlay from '../components/AsciiOverlay';
-import { swoosh, flourish, wind, lillies } from '../assets/ascii/overlays';
+import { swoosh, flourish, wind, lillies, bubbles, jellyfish, jellyfish2 } from '../assets/ascii/overlays';
 import { sparkleLine, whimsyLine } from '../assets/ascii/borders';
 
 export function entrySlug(date: Date): string {
@@ -24,6 +24,48 @@ export type ArchiveEntry = {
 };
 
 export const entries: ArchiveEntry[] = [
+  {
+    title: 'too soon once again, it feels like summer\'s already ending',
+    date: new Date(Date.UTC(2026, 7, 5)),
+    body: (
+      <>
+        It's already the last week of my internship and I'm busy wrapping everything up :(
+        <br /><br />
+        Took a weekend trip to Martha's Vineyard with some other interns last weekend though!
+        It was definitely a top-10 way to end the summer :)
+        <br /><br />
+        I'm talking like school's starting really soon, but there's still a month until classes
+        start again. Yet I already know it's fast approaching.
+      </>
+    ),
+    image: require('../assets/archive/marthas vineyard.png').default,
+    caption: 'alas didn\'t get any vineyard exclusives here',
+    borders: whimsyLine,
+    overlay: (
+      <>
+        <AsciiOverlay
+          art={bubbles}
+          style={{ transform: 'scaleX(-1)', bottom: '50%', left: '2%' }}
+         />
+        <AsciiOverlay
+          art={bubbles}
+          style={{ bottom: '28%', left: '-6%' }}
+         />
+        <AsciiOverlay
+          art={bubbles}
+          style={{ bottom: '20%', left: '4%' }}
+         />
+        <AsciiOverlay
+          art={jellyfish}
+          style={{ fontSize: '0.6rem', top: '10%', right: '-10%' }}
+         />
+        <AsciiOverlay
+          art={jellyfish2}
+          style={{ bottom: '0%', left: '30%' }}
+         />
+      </>
+    )
+  },
   {
     title: 'today i stayed in the park until dark',
     date: new Date(Date.UTC(2026, 6, 20)),
