@@ -1,15 +1,28 @@
 "use client"
+import { useEffect } from 'react';
 import ContextMenu from './components/ContextMenu';
 import HomeNav from './components/HomeNav';
 import ImageOverlay from './components/ImageOverlay';
 import Dither from './components/Dither.tsx';
+import { useIsMobile } from './components/useIsMobile';
 
-import succulentImg from './assets/originalSucculent.png';
+import succulentImg from './assets/succulent.png';
 import shellImg from './assets/shell.png';
 
 export default function Home() {
+  const isMobile = useIsMobile();
+
+  useEffect(() => {
+    document.documentElement.style.background = 'var(--color-bg-dark)';
+    document.documentElement.style.overscrollBehavior = 'none';
+    return () => {
+      document.documentElement.style.background = '';
+      document.documentElement.style.overscrollBehavior = '';
+    };
+  }, []);
+
   return (
-    <ContextMenu style={{ position: 'relative', width: '100vw', height: '100vh', overflow: 'hidden' }}>
+    <ContextMenu style={{ position: 'relative', width: '100vw', height: '100dvh', overflow: 'hidden', backgroundColor: 'var(--color-bg-dark)' }}>
       <Dither
         waveColor={[0.5333333333333333, 0.5333333333333333, 0.5333333333333333]}
         disableAnimation={false}
@@ -28,15 +41,18 @@ export default function Home() {
         width="80vw"
         height="80vh"
       />
-      <ImageOverlay
-        src={succulentImg}
-        top="20%"
-        left="0"
-        transform="scaleX(-1)"
-        width="72vw"
-        height="72vh"
-        objectPosition="right center"
-      />
+      {!isMobile && (
+        <ImageOverlay
+          src={succulentImg}
+          top="20%"
+          left="0"
+          transform="scaleX(-1)"
+          width="72vw"
+          height="72vh"
+          objectPosition="right center"
+          eager
+        />
+      )}
       <ImageOverlay
         src={shellImg}
         top="50%"
@@ -45,14 +61,17 @@ export default function Home() {
         width="60vw"
         height="60vh"
       />
-      <ImageOverlay
-        src={succulentImg}
-        top="-10%"
-        left="70%"
-        width="72vw"
-        height="72vh"
-        objectPosition="left center"
-      />
+      {!isMobile && (
+        <ImageOverlay
+          src={succulentImg}
+          top="-10%"
+          left="70%"
+          width="72vw"
+          height="72vh"
+          objectPosition="left center"
+          eager
+        />
+      )}
       <ImageOverlay
         src={shellImg}
         top="50%"

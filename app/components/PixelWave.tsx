@@ -1,6 +1,19 @@
 'use client'
 import { useRef, useEffect } from 'react';
 
+const COLOR_TRANSITION_MS = 450;
+
+function parseHexColor(hex: string): [number, number, number] | null {
+  const m = /^#([0-9a-f]{6})$/i.exec(hex.trim());
+  if (!m) return null;
+  const int = parseInt(m[1], 16);
+  return [(int >> 16) & 255, (int >> 8) & 255, int & 255];
+}
+
+function easeOutCubic(t: number): number {
+  return 1 - Math.pow(1 - t, 3);
+}
+
 interface PixelWaveProps {
   color?: string;
   maxHeight?: string | number;
@@ -30,8 +43,13 @@ export default function PixelWave({
   const mouseXRef = useRef(-1);
   const activeRef = useRef(false);
   const pausedRef = useRef(false);
-  const frozenTRef = useRef(0);
+  const tRef = useRef(0);
+  const lastTsRef = useRef<number | null>(null);
   const colorRef = useRef(color);
+  const colorRGBRef = useRef<[number, number, number] | null>(null);
+  const colorFromRGBRef = useRef<[number, number, number] | null>(null);
+  const colorToRGBRef = useRef<[number, number, number] | null>(null);
+  const colorTransitionStartRef = useRef<number | null>(null);
   const sharpnessRef = useRef(sharpness);
   const speedRef = useRef(speed);
   const pushStrengthRef = useRef(pushStrength);
@@ -41,11 +59,27 @@ export default function PixelWave({
   const fadeRef = useRef(fade);
 
   useEffect(() => {
-    if (color.startsWith('var(')) {
-      const name = color.slice(4, -1).trim();
-      colorRef.current = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    const resolved = color.startsWith('var(')
+      ? getComputedStyle(document.documentElement).getPropertyValue(color.slice(4, -1).trim()).trim()
+      : color;
+    colorRef.current = resolved;
+
+    const rgb = parseHexColor(resolved);
+    if (!rgb) {
+      // Non-hex colors (rgb/hsl/etc.) can't be lerped manually — fall back to an instant switch.
+      colorRGBRef.current = null;
+      colorToRGBRef.current = null;
+      colorTransitionStartRef.current = null;
+      return;
+    }
+    if (colorRGBRef.current) {
+      colorFromRGBRef.current = colorRGBRef.current;
+      colorToRGBRef.current = rgb;
+      colorTransitionStartRef.current = null; // set on next draw frame
     } else {
-      colorRef.current = color;
+      colorRGBRef.current = rgb;
+      colorFromRGBRef.current = rgb;
+      colorToRGBRef.current = null;
     }
   }, [color]);
 
@@ -93,8 +127,11 @@ export default function PixelWave({
       const H = canvas.height;
       ctx.clearRect(0, 0, W, H);
 
-      if (!pausedRef.current) frozenTRef.current = timestamp * 0.001 * speedRef.current;
-      const t = frozenTRef.current;
+      if (lastTsRef.current === null) lastTsRef.current = timestamp;
+      const dt = timestamp - lastTsRef.current;
+      lastTsRef.current = timestamp;
+      if (!pausedRef.current) tRef.current += dt * 0.001 * speedRef.current;
+      const t = tRef.current;
       const pxSize = pixelSizeRef.current;
       const step = pxSize + gapRef.current;
       const cols = Math.floor(W / step);
@@ -105,7 +142,27 @@ export default function PixelWave({
       const mx = mouseXRef.current;
       const active = activeRef.current;
 
-      ctx.fillStyle = colorRef.current;
+      if (colorToRGBRef.current) {
+        if (colorTransitionStartRef.current === null) colorTransitionStartRef.current = timestamp;
+        const elapsed = timestamp - colorTransitionStartRef.current;
+        const progress = easeOutCubic(Math.min(elapsed / COLOR_TRANSITION_MS, 1));
+        const [r1, g1, b1] = colorFromRGBRef.current!;
+        const [r2, g2, b2] = colorToRGBRef.current;
+        const rgb: [number, number, number] = [
+          r1 + (r2 - r1) * progress,
+          g1 + (g2 - g1) * progress,
+          b1 + (b2 - b1) * progress,
+        ];
+        ctx.fillStyle = `rgb(${Math.round(rgb[0])}, ${Math.round(rgb[1])}, ${Math.round(rgb[2])})`;
+        if (progress >= 1) {
+          colorRGBRef.current = colorToRGBRef.current;
+          colorFromRGBRef.current = colorToRGBRef.current;
+          colorToRGBRef.current = null;
+          colorTransitionStartRef.current = null;
+        }
+      } else {
+        ctx.fillStyle = colorRef.current;
+      }
 
       for (let c = 0; c < cols; c++) {
         const colX = c * step;
@@ -144,7 +201,7 @@ export default function PixelWave({
         ctx.globalAlpha = 1;
       }
 
-      if (animated) animId = requestAnimationFrame(draw);
+      if (animated || colorToRGBRef.current) animId = requestAnimationFrame(draw);
     };
 
     // After draw is defined: ResizeObserver can now reference it to redraw when not animated

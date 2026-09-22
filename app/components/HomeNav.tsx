@@ -7,7 +7,7 @@ export default function HomeNav() {
     <nav className="home-nav" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.75rem' }}>
       <h1 style={{
         margin: 0,
-        color: 'var(--color-bg)',
+        color: 'white',
         userSelect: 'none',
       }}>
         connie huang

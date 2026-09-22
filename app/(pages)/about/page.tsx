@@ -1,8 +1,10 @@
+'use client'
 import Image from 'next/image';
 import Link from 'next/link';
 import AsciiOverlay from '@/app/components/AsciiOverlay';
 import PageLayout from '../../components/PageLayout';
 import FitBorder from '../../components/FitBorder';
+import { useIsMobile } from '../../components/useIsMobile';
 import { wings, bannerLine } from '../../assets/ascii/borders';
 import { ornamentSwirl, birds } from '@/app/assets/ascii/overlays';
 
@@ -10,6 +12,7 @@ import meOnThePhone from '../../assets/me on the phone.png';
 import meToddler from '../../assets/me toddler.png';
 import meChild from '../../assets/me child.png';
 import meTween from '../../assets/me tween.png';
+import meToddlerCrying from '../../assets/me toddler cry.png';
 
 const SOCIAL_LINKS = [
   { label: 'email', href: 'mailto:cohuang@mit.edu' },
@@ -20,7 +23,7 @@ const SOCIAL_LINKS = [
 const CHILDHOOD_PHOTOS = [
   { src: meToddler, alt: 'me as a toddler' },
   { src: meChild, alt: 'me as a child' },
-  { src: meTween, alt: 'me as a tween' },
+  { src: meToddlerCrying, alt: 'me as a toddler crying' },
 ];
 
 const overlay = (
@@ -37,9 +40,10 @@ const overlay = (
 );
 
 export default function About() {
+  const isMobile = useIsMobile();
   return (
-    <PageLayout overlay={overlay}>
-      <div style={{ display: 'flex', gap: '5rem' }}>
+    <PageLayout overlay={overlay} waveProps={isMobile ? undefined : { pixelSize: 6, speed: 1.4, maxHeight: '54vh' }}>
+      {/* <div style={{ display: 'flex', gap: '5rem' }}> */}
         {/* <Image
           src={meOnThePhone}
           alt="me on the phone"
@@ -50,18 +54,20 @@ export default function About() {
           style={{ display: 'block', flexShrink: 0, aspectRatio: '3 / 4', objectFit: 'cover' }}
         /> */}
 
-        <div style={{ display: 'flex', flexDirection: 'column', flex: 1, gap: '1.25rem' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', flex: 1, gap: '0.75rem' }}>
           <FitBorder
             borders={wings}
             style={{ color: 'var(--color-accent-muted)', fontSize: '2rem', textAlign: 'center' }}
           />
 
-          <div>
+          <div style={{ display: 'flex', flexDirection: 'column', flex: 1, gap: '1rem' }}>
             <h1>
               Hi, I&apos;m Connie Huang.
             </h1>
             <p>
-              I&apos;m an aspiring software engineer and designer from NY. I love building things that are both functional and beautiful, and I&apos;m always looking for new things to learn.
+              I&apos;m an aspiring software engineer from NY. My interests over the years have included studying some pure math, painting with gouache,
+              creating efficient solutions, and most recently recognizing high fashion. I love things that are beautiful in their aesthetic and their
+              execution, and I&apos;m always looking to learn more.
             </p>
           </div>
 
@@ -78,7 +84,11 @@ export default function About() {
             ))}
           </div>
 
-          <div style={{ display: 'flex', height: '11rem' }}>
+          <div style={{
+            display: 'flex',
+            height: '16rem',
+            ...(isMobile ? { width: '100vw', marginLeft: 'calc(50% - 50vw)', marginRight: 'calc(50% - 50vw)' } : {}),
+          }}>
             {CHILDHOOD_PHOTOS.map(({ src, alt }) => (
               <div key={alt} style={{ position: 'relative', flex: 1 }}>
                 <Image
@@ -93,7 +103,7 @@ export default function About() {
             ))}
           </div>
         </div>
-      </div>
+      {/* </div> */}
     </PageLayout>
   );
 }

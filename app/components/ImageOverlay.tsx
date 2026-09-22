@@ -12,6 +12,7 @@ interface ImageOverlayProps {
   objectFit?: 'contain' | 'cover' | 'fill' | 'none' | 'scale-down';
   objectPosition?: string;
   transform?: string;
+  eager?: boolean;
 }
 
 export default function ImageOverlay({
@@ -26,6 +27,7 @@ export default function ImageOverlay({
   objectFit = 'contain',
   objectPosition,
   transform,
+  eager = false,
 }: ImageOverlayProps) {
   return (
     <div style={{
@@ -40,7 +42,14 @@ export default function ImageOverlay({
       height,
       transform,
     }}>
-      <Image src={src} alt={alt} fill style={{ objectFit, objectPosition }} />
+      <Image
+        src={src}
+        alt={alt}
+        fill
+        sizes={width}
+        preload={eager}
+        style={{ objectFit, objectPosition }}
+      />
     </div>
   );
 }

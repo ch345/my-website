@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Spectral, JetBrains_Mono, Noto_Sans } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import { AppearanceProvider } from "./components/AppearanceContext";
 import "./globals.css";
 
 const spectral = Spectral({
@@ -21,7 +22,7 @@ const notoSans = Noto_Sans({
 
 export const metadata: Metadata = {
   title: "Connie Huang",
-  description: "hello world",
+  description: "hello world, this is my website",
 };
 
 export default function RootLayout({
@@ -35,8 +36,10 @@ export default function RootLayout({
       className={`${spectral.variable} ${jetbrainsMono.variable} ${notoSans.variable} h-full`}
     >
       <body className="min-h-full flex flex-col">
-        {children}
-        <Analytics />
+        <AppearanceProvider>
+          {children}
+          <Analytics />
+        </AppearanceProvider>
       </body>
     </html>
   );

@@ -6,9 +6,9 @@ import { swoosh, flourish, wind, lillies } from '../assets/ascii/overlays';
 import { sparkleLine, whimsyLine } from '../assets/ascii/borders';
 
 export function entrySlug(date: Date): string {
-  const y = date.getFullYear();
-  const m = String(date.getMonth()).padStart(2, '0');
-  const d = String(date.getDate()).padStart(2, '0');
+  const y = date.getUTCFullYear();
+  const m = String(date.getUTCMonth() + 1).padStart(2, '0');
+  const d = String(date.getUTCDate()).padStart(2, '0');
   return `${y}${m}${d}`;
 }
 
@@ -26,7 +26,7 @@ export type ArchiveEntry = {
 export const entries: ArchiveEntry[] = [
   {
     title: 'today i stayed in the park until dark',
-    date: new Date(2026, 7, 20),
+    date: new Date(Date.UTC(2026, 6, 20)),
     body: (
       <>
         Ate my dinner and continued making this website on the picnic table. I got 3 mosquito bites but worth it.
@@ -46,7 +46,7 @@ export const entries: ArchiveEntry[] = [
   },
   {
     title: 'making this website',
-    date: new Date(2026, 7, 19),
+    date: new Date(Date.UTC(2026, 6, 19)),
     body: (
       <>
         Finally getting around to making this website. Entering my blogger life soon?!
@@ -68,7 +68,7 @@ export const entries: ArchiveEntry[] = [
   },
   {
     title: 'hello from my figma mockup in march when there was still snow on the ground',
-    date: new Date(2026, 3, 2),
+    date: new Date(Date.UTC(2026, 2, 2)),
     body: (
       <>
         <p>

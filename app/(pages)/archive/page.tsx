@@ -5,14 +5,16 @@ import Link from 'next/link';
 import AsciiOverlay from '../../components/AsciiOverlay';
 import PageLayout from '../../components/PageLayout';
 import FitBorder from '../../components/FitBorder';
+import ArchiveMobileGrid from '../../components/ArchiveMobileGrid';
+import { useIsMobile } from '../../components/useIsMobile';
 import { entries, entrySlug } from '../../data/entries';
 import { whimsyLine, bannerLine } from '../../assets/ascii/borders';
 import { ornament, sakura } from '../../assets/ascii/overlays';
 
 function formatDate(date: Date): string {
-  const mm = String(date.getMonth()).padStart(2, '0');
-  const dd = String(date.getDate()).padStart(2, '0');
-  const yyyy = date.getFullYear();
+  const mm = String(date.getUTCMonth() + 1).padStart(2, '0');
+  const dd = String(date.getUTCDate()).padStart(2, '0');
+  const yyyy = date.getUTCFullYear();
   return `${mm}.${dd}.${yyyy}`;
 }
 
@@ -30,6 +32,7 @@ const overlay = (
 );
 
 export default function Archive() {
+  const isMobile = useIsMobile();
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const preRef = useRef<HTMLPreElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -57,6 +60,14 @@ export default function Archive() {
     ro.observe(document.body);
     return () => ro.disconnect();
   }, []);
+
+  if (isMobile) {
+    return (
+      <PageLayout overlay={overlay}>
+        <ArchiveMobileGrid />
+      </PageLayout>
+    );
+  }
 
   return (
     <PageLayout overlay={overlay}>
@@ -204,7 +215,7 @@ export default function Archive() {
           </div>
 
           <div style={{ marginTop: '4rem', color: 'var(--color-accent-muted)', textAlign: 'right' }}>
-            website created March 3rd, 2026
+            website published July 22nd, 2026
           </div>
 
         </div>

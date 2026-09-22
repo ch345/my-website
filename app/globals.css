@@ -29,26 +29,54 @@
   --font-emoticon:        var(--font-emoticon);
 }
 
+:root[data-theme='dark'] {
+  --color-bg: var(--color-bg-dark);
+  --color-text: var(--color-text-dark);
+}
+
+html {
+  background: var(--color-bg);
+  transition: background-color 0.4s ease;
+  overflow-x: hidden;
+}
+
 body {
   background: var(--color-bg);
   color: var(--color-text);
   font-family: var(--font-body), monospace;
+  transition: background-color 0.4s ease, color 0.4s ease;
+  overflow-x: hidden;
 }
 
 h1 {
   font-family: var(--font-title), serif;
   font-size: 3rem;
   font-weight: 600;
+  line-height: 1.1;
 }
 
 h2 {
   font-family: var(--font-title), serif;
   font-size: 2rem;
   font-weight: 600;
+  line-height: 1.1;
 }
 
 h3, h4, h5, h6 {
   font-family: var(--font-title), serif;
+}
+
+.page-main {
+  padding: 2rem 8rem 0rem;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  min-width: 0;
+}
+
+@media (max-width: 768px) {
+  .page-main {
+    padding: 1.5rem 2rem 0rem;
+  }
 }
 
 .ascii {
@@ -74,6 +102,43 @@ h3, h4, h5, h6 {
   image-rendering: crisp-edges;
 }
 
+.hidden-note {
+  position: relative;
+  cursor: help;
+}
+
+.hidden-note-tooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-0.35rem);
+  white-space: nowrap;
+  background: var(--color-bg);
+  color: var(--color-text);
+  border: 1px solid var(--color-bg-detail);
+  padding: 0.35rem 0.6rem;
+  font-size: 0.85rem;
+  font-family: var(--font-body), monospace;
+  opacity: 0;
+  display: none;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+  z-index: 10;
+}
+
+@media (max-width: 768px) {
+  .hidden-note-tooltip {
+    white-space: normal;
+    width: max-content;
+    max-width: min(16rem, calc(100vw - 2rem));
+  }
+}
+
+.hidden-note:hover .hidden-note-tooltip {
+  opacity: 1;
+  display: block;
+}
+
 main a, main button, main input, main textarea, main select, main [role="button"], main [tabindex],
 .top-nav a, .top-nav button, .top-nav [role="button"], .top-nav [tabindex] {
   pointer-events: auto;
@@ -96,7 +161,7 @@ a:hover {
 }
 
 .home-nav a {
-  color: var(--color-bg);
+  color: white;
 }
 
 .home-nav a:hover {

@@ -1,23 +1,38 @@
+'use client'
 import ContextMenu from './ContextMenu';
 import TopNav from './TopNav';
 import PixelWave from './PixelWave';
 import FitBorder from './FitBorder';
+import { useAppearance } from './AppearanceContext';
 import { morse } from '../assets/ascii/borders';
+
+const DEFAULT_WAVE_PROPS = {
+  pixelSize: 6,
+  gap: 3,
+  shape: 'circle' as const,
+  sharpness: 3,
+  speed: 0.5,
+};
 
 export default function PageLayout({
   children,
   overlay,
   defaultLightMode = true,
+  waveProps,
 }: {
   children: React.ReactNode;
   overlay?: React.ReactNode;
   defaultLightMode?: boolean;
+  waveProps?: Partial<React.ComponentProps<typeof PixelWave>>;
 }) {
-  const bg = defaultLightMode ? 'var(--color-bg)' : 'var(--color-bg-dark)';
-  const bgDetail = defaultLightMode ? 'var(--color-bg-detail)' : 'var(--color-bg-dark-detail)';
-  const text = defaultLightMode ? 'var(--color-text)' : 'var(--color-text-dark)';
+  const { effectiveMode } = useAppearance();
+  const isLight = effectiveMode === 'default' ? defaultLightMode : effectiveMode === 'light';
 
-  const themeOverrides: React.CSSProperties = defaultLightMode
+  const bg = isLight ? 'var(--color-bg)' : 'var(--color-bg-dark)';
+  const bgDetail = isLight ? 'var(--color-bg-detail)' : 'var(--color-bg-dark-detail)';
+  const text = isLight ? 'var(--color-text)' : 'var(--color-text-dark)';
+
+  const themeOverrides: React.CSSProperties = isLight
     ? {}
     : ({
         '--color-bg': 'var(--color-bg-dark)',
@@ -28,21 +43,22 @@ export default function PageLayout({
   return (
     <ContextMenu style={{
       position: 'relative',
-      minHeight: '100vh',
+      minHeight: '100dvh',
       isolation: 'isolate',
       display: 'flex',
       flexDirection: 'column',
       backgroundColor: bg,
       color: text,
+      transition: 'background-color 0.4s ease, color 0.4s ease',
       ...themeOverrides,
     } as React.CSSProperties}>
       <div style={{ position: 'relative', zIndex: 4, overflow: 'visible' }}>
         <TopNav />
-        <div style={{ position: 'absolute', top: '-9vh', left: 0, right: 0, zIndex: -1 }}>
-          <PixelWave color={bgDetail} pixelSize={6} gap={3} shape='circle' sharpness={3} speed={0.5} />
-        </div>
       </div>
-      <main style={{ position: 'relative', zIndex: 4, flex: 1, padding: '2rem 8rem 0rem', pointerEvents: 'none' }}>
+      <div style={{ position: 'absolute', top: '-9vh', left: 0, right: 0, zIndex: -1 }}>
+        <PixelWave color={bgDetail} {...DEFAULT_WAVE_PROPS} {...waveProps} />
+      </div>
+      <main className="page-main" style={{ position: 'relative', zIndex: 4, flex: 1, pointerEvents: 'none' }}>
         {children}
       </main>
       <footer style={{ position: 'relative', zIndex: 2, overflow: 'hidden', padding: '1rem' }}>
