@@ -1,26 +1,124 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-text:           #352423;
+  --color-text-dark:      #cbb8b6;
+  --color-bg:             #F8FCFD;
+  --color-bg-detail:      #D9D9D9;
+  --color-bg-dark:        #060606;
+  --color-bg-dark-detail: #555555;
+  --color-accent:         #B2BE86;
+  --color-accent-muted:   #7DA2A7;
+
+  --font-title: var(--font-spectral);
+  --font-body:  var(--font-jetbrains-mono);
+  --font-emoticon: var(--font-noto-sans);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-text:           var(--color-text);
+  --color-text-dark:      var(--color-text-dark);
+  --color-bg:             var(--color-bg);
+  --color-bg-detail:      var(--color-bg-detail);
+  --color-bg-dark:        var(--color-bg-dark);
+  --color-bg-dark-detail: var(--color-bg-dark-detail);
+  --color-accent:         var(--color-accent);
+  --color-accent-muted:   var(--color-accent-muted);
+  --font-title:           var(--font-title);
+  --font-body:            var(--font-body);
+  --font-emoticon:        var(--font-emoticon);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body), monospace;
+}
+
+h1 {
+  font-family: var(--font-title), serif;
+  font-size: 3rem;
+  font-weight: 600;
+}
+
+h2 {
+  font-family: var(--font-title), serif;
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+h3, h4, h5, h6 {
+  font-family: var(--font-title), serif;
+}
+
+.ascii {
+  font-family: var(--font-emoticon), sans-serif;
+  font-weight: 400;
+  transition: color 0.1s;
+}
+
+.ascii:not(.char-hover):hover {
+  color: var(--ascii-hover-color, color-mix(in oklch, currentColor 65%, black));
+}
+
+.ascii.char-hover span {
+  transition: color 0.1s;
+}
+
+.ascii.char-hover span:hover {
+  color: var(--ascii-hover-color, color-mix(in oklch, currentColor 65%, black));
+}
+
+.pixelated {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+main a, main button, main input, main textarea, main select, main [role="button"], main [tabindex],
+.top-nav a, .top-nav button, .top-nav [role="button"], .top-nav [tabindex] {
+  pointer-events: auto;
+}
+
+blockquote {
+  margin-left: 1.5rem;
+  padding-left: 1rem;
+  border-left: 2px solid var(--color-bg-detail);
+}
+
+a {
+  color: var(--color-accent);
+  text-decoration: none;
+  transition: color 0.1s;
+}
+
+a:hover {
+  text-decoration: line-through;
+}
+
+.home-nav a {
+  color: var(--color-bg);
+}
+
+.home-nav a:hover {
+  color: var(--color-accent);
+}
+
+.top-nav-home,
+.top-nav-link {
+  color: var(--color-text);
+}
+
+.top-nav-home:hover {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+.top-nav-link.active {
+  color: var(--color-accent);
+  text-decoration: line-through;
+}
+
+.top-nav-link:hover {
+  color: var(--color-accent-muted);
+  text-decoration: line-through;
 }

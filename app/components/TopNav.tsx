@@ -1,0 +1,39 @@
+"use client"
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { NAV_LINKS } from './navLinks';
+
+export default function TopNav() {
+  const pathname = usePathname();
+  return (
+    <nav className="top-nav" style={{
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      padding: '1.25rem 2rem',
+    }}>
+      <Link href="/" className="top-nav-home" style={{
+        fontFamily: 'var(--font-title), serif',
+        fontWeight: 600,
+        fontSize: '1.5rem',
+      }}>
+        connie huang
+      </Link>
+      <ul style={{ display: 'flex', gap: '3rem', listStyle: 'none', padding: 0, margin: 0 }}>
+        {NAV_LINKS.map(({ href, label }) => {
+          const active = pathname === href;
+          return (
+            <li key={href}>
+              <Link href={href} className={`top-nav-link${active ? ' active' : ''}`} style={{
+                fontFamily: 'var(--font-body), monospace',
+                fontSize: '1rem',
+              }}>
+                {label}
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
+    </nav>
+  );
+}
